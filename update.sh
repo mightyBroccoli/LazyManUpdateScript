@@ -12,7 +12,7 @@ PURPLE="\033[0;35m"
 ENDCOLOR="\033[0m"
 OLDCONF=$(dpkg -l|grep "^rc"|awk '{print $2}')
 
-#introduction of  methods
+# methods
 
 aptitude_check ()
 #check if package 'aptitude' is installed
@@ -25,6 +25,18 @@ aptitude_check ()
   fi
 }
 aptitude_check
+
+dpkg_check ()
+#check if package 'dpkg' is installed
+{
+  if command -v dpkg > /dev/null; then
+    echo -e $GREEN"Detected dpkg"$ENDCOLOR
+  else
+    echo $RED"Installing dpkg..."$ENDCOLOR
+    apt-get install -q -y dpkg
+  fi
+}
+dpkg_check
 
 root_check()
 #test for root
