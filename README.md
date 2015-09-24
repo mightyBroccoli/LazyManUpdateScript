@@ -12,3 +12,6 @@ I decided I wanted some fancy prompt to look at when I run this script. Deal wit
 
 # not root yet?
 my script is only for the system administrator to use. if there is an error or something happens that needs direct attention root is always there for you.
+
+# init.sh
+This is a simple script I use for keeping the update.sh file on all my systems on the neweset version. Using the https connection to create and/or update an update.sh file.
