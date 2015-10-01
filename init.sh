@@ -17,7 +17,7 @@ if command -v find ~/ -name 'update.sh' | xargs cp --suffix=.old -t /root/script
 else
 #if no file is found creakting a new folder and sym link in /root/
 	echo -e "creating scripts folder at /root/scripts/"
-	mkdir /~/scripts/
+	mkdir ~/scripts/
 	
 	echo -e "creating a new file in /root/scripts/"
 	touch ~/scripts/update.sh
