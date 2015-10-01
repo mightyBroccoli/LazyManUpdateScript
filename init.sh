@@ -27,5 +27,5 @@ else
 fi
 
 # getting the newest version from github
-curl https://raw.githubusercontent.com/mightyBroccoli/upgrade_script/master/update.sh >> ~/skripts/update.sh
+curl https://raw.githubusercontent.com/mightyBroccoli/upgrade_script/master/update.sh >> ~/scripts/update.sh
 
