@@ -9,23 +9,21 @@ if [ $USER != root ]; then
 fi
 
 #testing for a file in /root/scripts
-if command -v find ~/ -name "update.sh" > /dev/null; then
+if command -v find ~/ -name 'update.sh' | xargs cp --suffix=.old -t /root/scripts/ > /dev/null; then
 	echo -e "old script detected"
-	echo -e "backup old skript..."
-	cp -f ~/skritps/update.sh /root/skripts/update.sh.old
-	rm ~/skripts/update.sh
-	touch ~/skripts/update.sh
+	echo -e "backup old script..."
+	rm ~/scripts/update.sh
+	touch ~/scripts/update.sh
 else
 #if no file is found creakting a new folder and sym link in /root/
-	echo -e "creating skripts folder at /root/skripts/"
-	mkdir /root/skripts
+	echo -e "creating scripts folder at /root/scripts/"
+	mkdir /~/scripts/
 	
-	echo -e "creating a new file in /root/skripts/"
-	touch ~/skripts/update.sh
+	echo -e "creating a new file in /root/scripts/"
+	touch ~/scripts/update.sh
 	
-	echo -e "creating symbolic link at /root/"
-	rm /root/update.sh
-	ln -s /root/skripts/update.sh /root/update.sh
+	rm ~/update.sh
+	ln -s ~/scripts/update.sh /root/update.sh
 fi
 
 # getting the newest version from github
