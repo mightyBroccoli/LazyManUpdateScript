@@ -12,8 +12,7 @@ PURPLE="\033[0;35m"
 ENDCOLOR="\033[0m"
 OLDCONF=$(dpkg -l|grep "^rc"|awk '{print $2}')
 
-# methods
-
+#are all packetmanager and tools installed?
 aptitude_check ()
 #check if package 'aptitude' is installed
 {
