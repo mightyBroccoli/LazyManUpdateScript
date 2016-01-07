@@ -98,5 +98,5 @@ unset RED GREEN YELLOW BLUE PURPLE ENDCOLOR OLDCONF
 
 #check if reboot is needed
 if [ -f /var/run/reboot-required ]; then
-  echo 'reboot is required to apply all updates to the running system.'
+  echo 'reboot is required'
 fi
