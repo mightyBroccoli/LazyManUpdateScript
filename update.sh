@@ -10,6 +10,7 @@ YELLOW="\033[1;33m"
 BLUE="\033[0;34m"
 PURPLE="\033[0;35m"
 ENDCOLOR="\033[0m"
+CYAN="\033[1;36m"
 OLDCONF=$(dpkg -l|grep "^rc"|awk '{print $2}')
 
 #are all packetmanager and tools installed?
@@ -92,10 +93,15 @@ echo ------
 aptitude purge $OLDCONF
 #removing unused config files with assume yes
 
-#clearing variables
-unset RED GREEN YELLOW BLUE PURPLE ENDCOLOR OLDCONF
-
 #check if reboot is needed
+echo ------
+echo -e $CYAN "Should I consider a reboot?" $ENDCOLOR
+echo ------
 if [ -f /var/run/reboot-required ]; then
   echo 'reboot is required'
+  else
+  echo 'no reboot required'
 fi
+
+#clearing variables
+unset RED GREEN YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF
