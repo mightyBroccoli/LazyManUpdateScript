@@ -98,9 +98,9 @@ echo ------
 echo -e $CYAN "Should I consider a reboot?" $ENDCOLOR
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo 'reboot is required'
+  echo -e $RED 'reboot is required'
   else
-  echo 'no reboot required'
+  echo -e $GREEN 'no reboot required'
 fi
 
 #clearing variables
