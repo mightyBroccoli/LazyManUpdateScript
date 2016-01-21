@@ -5,7 +5,9 @@
 
 #variables
 RED="\033[0;31m"
+REDBACK="\033[47;1;31m"
 GREEN="\033[0;32m"
+GREENBACK="\033[47;1;32m"
 YELLOW="\033[1;33m"
 BLUE="\033[0;34m"
 PURPLE="\033[0;35m"
@@ -13,7 +15,7 @@ ENDCOLOR="\033[0m"
 CYAN="\033[1;36m"
 OLDCONF=$(dpkg -l|grep "^rc"|awk '{print $2}')
 
-#are all packetmanager and tools installed?
+#some subroutines
 aptitude_check ()
 #check if package 'aptitude' is installed
 {
@@ -24,8 +26,15 @@ aptitude_check ()
     apt-get install -q -y aptitude
   fi
 }
-aptitude_check
-
+root_check()
+#is the running user root?
+{
+if [ $USER != root ]; then
+  echo -e $RED"Error: must be root"
+  echo -e $YELLOW"Exiting..."$ENDCOLOR
+  exit 0
+fi
+}
 dpkg_check ()
 #check if package 'dpkg' is installed
 {
@@ -36,49 +45,47 @@ dpkg_check ()
     apt-get install -q -y dpkg
   fi
 }
-dpkg_check
 
-root_check()
-#test for root
-{
-if [ $USER != root ]; then
-  echo -e $RED"Error: must be root"
-  echo -e $YELLOW"Exiting..."$ENDCOLOR
-  exit 0
-fi
-}
+#running subroutines
+dpkg_check
+aptitude_check
 root_check
 
+# --- the actual script ---
+echo ------
+echo ------
+#apt-get update with the option assume yes (-y) just showing new packets
 echo " "
 echo -e $RED "resynchronizing the package index..." $ENDCOLOR
 echo " "
 apt-get update -y | grep -E "^Holen|^Get"
-#update with assume yes (y) just showing new packets
 
 echo ------
 echo -e $GREEN "upgrade" $ENDCOLOR 
 echo ------
+#automaticly updating the installed packages from available ressources
+#apt-get upgrade with the option assume yes (-y)
 apt-get upgrade -y
-#upgrade assume yes (y)
+#apt-get dist-upgrade with the option assume yes (-y)
 apt-get dist-upgrade -y
-#dist-upgrade assume yes (y)
 
 echo ------
 echo -e $YELLOW "dependencies" $ENDCOLOR
 echo ------
+#check for broken dependencies
+#apt-get check with the option assume yes (-y)
 apt-get check -y
-#dependencies check assume yes (y)
+#apt-get install with the option fix-broken (-f) and fix-missing (-m) and assume yes (-y)
 apt-get install -f -m -y
-#dependencies install fix-broke (f) and fix-missing (m) and assume yes (y)
 
 echo ------
 echo -e  $BLUE "cleaning" $ENDCOLOR
 echo ------
+#various cleaning options
 apt-get autoremove -y
 apt-get autoclean -y
 apt-get clean -y
 aptitude autoclean
-#various cleaning options with assume yes (y)
 
 echo " "
 echo -e $RED "dumping local trash files..." $ENDCOLOR
@@ -90,18 +97,18 @@ rm -rf /root/.local/share/Trash/*/** &> /dev/null
 echo ------
 echo -e $PURPLE "Removing old config files" $ENDCOLOR
 echo ------
+#removing unused config files !!NO ASSUME YES HERE TO PREVENT BROKEN STUFF!!
 aptitude purge $OLDCONF
-#removing unused config files with assume yes
 
 #check if reboot is needed
 echo ------
 echo -e $CYAN "Should I consider a reboot?" $ENDCOLOR
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo -e $RED 'reboot is required'
+  echo -e $REDBACK 'reboot is required'
   else
-  echo -e $GREEN 'no reboot required'
+  echo -e $GREENBACK 'no reboot required'
 fi
 
 #clearing variables
-unset RED GREEN YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF
+unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF
