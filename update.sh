@@ -5,9 +5,7 @@
 
 #variables
 RED="\033[0;31m"
-REDBACK="\033[47;1;31m"
 GREEN="\033[0;32m"
-GREENBACK="\033[47;1;32m"
 YELLOW="\033[1;33m"
 BLUE="\033[0;34m"
 PURPLE="\033[0;35m"
@@ -105,9 +103,9 @@ echo ------
 echo -e $CYAN "Should I consider a reboot?" $ENDCOLOR
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo -e $REDBACK 'reboot is required'$ENDCOLOR
+  echo -e $CYAN 'reboot is required'$ENDCOLOR
   else
-  echo -e $GREENBACK 'no reboot required'$ENDCOLOR
+  echo -e $CYAN 'no reboot required'$ENDCOLOR
 fi
 
 #clearing variables
