@@ -56,16 +56,16 @@ echo ------
 echo " "
 echo -e $RED "resynchronizing the package index..." $ENDCOLOR
 echo " "
-apt-get update -y | grep -E "^Holen|^Get"
+apt update -y | grep -E "^Holen|^Get"
 
 echo ------
 echo -e $GREEN "upgrade" $ENDCOLOR 
 echo ------
 #automaticly updating the installed packages from available ressources
 #apt-get upgrade with the option assume yes (-y)
-apt-get upgrade -y
+apt upgrade -y
 #apt-get dist-upgrade with the option assume yes (-y)
-apt-get dist-upgrade -y
+apt dist-upgrade -y
 
 echo ------
 echo -e $YELLOW "dependencies" $ENDCOLOR
@@ -74,7 +74,7 @@ echo ------
 #apt-get check with the option assume yes (-y)
 apt-get check -y
 #apt-get install with the option fix-broken (-f) and fix-missing (-m) and assume yes (-y)
-apt-get install -f -m -y
+apt install -f -m -y
 
 echo ------
 echo -e  $BLUE "cleaning" $ENDCOLOR
