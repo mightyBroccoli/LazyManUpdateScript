@@ -31,7 +31,7 @@ aptitude_check ()
   if command -v aptitude > /dev/null; then
     echo -e $GREEN"Detected aptitude"$ENDCOLOR
   else
-    echo $RED"Installing aptitude...\n"$ENDCOLOR
+    echo -e $RED"Installing aptitude...\n"$ENDCOLOR
     apt-get install -q -y aptitude
   fi
 }
@@ -41,7 +41,7 @@ dpkg_check ()
   if command -v dpkg > /dev/null; then
     echo -e $GREEN"Detected dpkg"$ENDCOLOR
   else
-    echo $RED"Installing dpkg...\n"$ENDCOLOR
+    echo -e $RED"Installing dpkg...\n"$ENDCOLOR
     apt-get install -q -y dpkg
   fi
 }
@@ -51,7 +51,7 @@ awk_check ()
   if command -v mawk > /dev/null; then
     echo -e $GREEN"Detected mawk"$ENDCOLOR
   else
-    echo $RED"Installing awk...\n"$ENDCOLOR
+    echo -e $RED"Installing awk...\n"$ENDCOLOR
     apt-get install -q -y mawk
   fi
 }
@@ -60,9 +60,9 @@ awk_check ()
 #running subroutines
 if [ -f "$FILE" ];
 then
-  echo "Dependencies already checked.\n"
+  echo -e "Dependencies already checked.\n"
 else
-  echo "Checking now /n"
+  echo -e "Checking now /n"
   root_check
   dpkg_check
   aptitude_check
@@ -81,7 +81,7 @@ apt update -y | grep -E "^Holen|^Get"
 #showing upgradable packages
 echo -e $GREEN "\n upgradable packages: \n" $ENDCOLOR
 apt list --upgradable
-echo "\n"
+echo -e "\n"
 
 #upgrading packages
 read -p "Upgrade packages? " -n 1 -r
@@ -125,7 +125,8 @@ fi
 echo -e "\n"
 echo "Cleaning involves :"
 echo "* removing unused packages"
-echo "* cleanig out package list cache"
+echo "* cleanig package list cache"
+echo "* cleaning users trash"
 echo -e "\n"
 read -p "Should cleaning be done? " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
@@ -145,8 +146,7 @@ else
   aptitude autoclean
 
   echo " "
-  echo -e $RED "dumping local trash files..." $ENDCOLOR
-  echo " "
+  echo -e $RED "dumping local trash files... \n" $ENDCOLOR
   rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
   rm -rf /root/.local/share/Trash/*/** &> /dev/null
   #cleaning user/ root temp files
