@@ -4,7 +4,8 @@
 #mb
 
 #variables
-FILE="/home/nico/scripts/lazymanupdatescript/.dependencies"
+#possibly change the location
+FILE="~/scripts/lazymanupdatescript/.dependencies"
 RED="\033[0;31m"
 GREEN="\033[0;32m"
 YELLOW="\033[1;33m"
