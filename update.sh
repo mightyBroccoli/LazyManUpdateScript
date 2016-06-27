@@ -61,7 +61,7 @@ if [ -f "$FILE" ];
 then
   echo "Dependencies already checked."
 else
-  echo "Checking now" /n
+  echo "Checking now /n"
   root_check
   dpkg_check
   aptitude_check
@@ -90,7 +90,7 @@ read -p "Upgrade packages? " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   # n
-  echo -e "skipping ... \n"
+  echo -e "\n skipping ... \n"
 else
   # y
   echo -e "\n"
@@ -109,7 +109,7 @@ read -p "Check all dependencies? " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   # n
-  echo -e "skipping ... \n"
+  echo -e "\n skipping ... \n"
 else
   # y
   echo -e "\n"
@@ -133,7 +133,7 @@ read -p "Should cleaning be done? " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   # n
-  echo -e "skipping ... \n"
+  echo -e "\n skipping ... \n"
 else
   # y
   echo -e "\n"
@@ -155,11 +155,11 @@ else
 fi
 
 #removing old config files and checking if reboot is needed
-read -p "Are you sure? " -n 1 -r
+read -p "Remove old config files ? " -n 1 -r
 if [[ ! $REPLY =~ ^[Yy]$ ]]
 then
   # n
-  echo -e "skipping ... \n"
+  echo -e "\n skipping ... \n"
 else
   # y
   echo -e "\n"
@@ -168,8 +168,9 @@ else
   echo ------
   #removing unused config files !!NO ASSUME YES HERE TO PREVENT BROKEN STUFF!!
   aptitude purge $OLDCONF
+fi
 
-  #check if reboot is needed
+ #check if reboot is needed
   echo ------
   echo -e $CYAN "Should I consider a reboot?" $ENDCOLOR
   echo ------
@@ -178,7 +179,6 @@ else
     else
     echo -e $CYAN 'no reboot required'$ENDCOLOR
   fi
-fi
 
 #clearing variables
 unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF FILE
