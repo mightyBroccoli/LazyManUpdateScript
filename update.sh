@@ -20,8 +20,8 @@ root_check()
 #is the running user root?
 {
 if [ $USER != root ]; then
-  echo -e $RED"Error: must be root"
-  echo -e $YELLOW"Exiting..."$ENDCOLOR
+  echo -e $RED"Error: must be root \n"
+  echo -e $YELLOW"Exiting...\n"$ENDCOLOR
   exit 0
 fi
 }
@@ -31,7 +31,7 @@ aptitude_check ()
   if command -v aptitude > /dev/null; then
     echo -e $GREEN"Detected aptitude"$ENDCOLOR
   else
-    echo $RED"Installing aptitude..."$ENDCOLOR
+    echo $RED"Installing aptitude...\n"$ENDCOLOR
     apt-get install -q -y aptitude
   fi
 }
@@ -41,7 +41,7 @@ dpkg_check ()
   if command -v dpkg > /dev/null; then
     echo -e $GREEN"Detected dpkg"$ENDCOLOR
   else
-    echo $RED"Installing dpkg..."$ENDCOLOR
+    echo $RED"Installing dpkg...\n"$ENDCOLOR
     apt-get install -q -y dpkg
   fi
 }
@@ -51,7 +51,7 @@ awk_check ()
   if command -v mawk > /dev/null; then
     echo -e $GREEN"Detected mawk"$ENDCOLOR
   else
-    echo $RED"Installing awk..."$ENDCOLOR
+    echo $RED"Installing awk...\n"$ENDCOLOR
     apt-get install -q -y mawk
   fi
 }
@@ -60,7 +60,7 @@ awk_check ()
 #running subroutines
 if [ -f "$FILE" ];
 then
-  echo "Dependencies already checked."
+  echo "Dependencies already checked.\n"
 else
   echo "Checking now /n"
   root_check
@@ -75,16 +75,13 @@ fi
 echo ------
 echo ------
 #apt-get update with the option assume yes (-y) just showing new packets
-echo " "
-echo -e $RED "resynchronizing the package index..." $ENDCOLOR
-echo " "
+echo -e $RED "\n resynchronizing the package index...\n" $ENDCOLOR
 apt update -y | grep -E "^Holen|^Get"
 
 #showing upgradable packages
-echo " "
-echo -e $GREEN "upgradable packages: \n" $ENDCOLOR
+echo -e $GREEN "\n upgradable packages: \n" $ENDCOLOR
 apt list --upgradable
-echo " "
+echo "\n"
 
 #upgrading packages
 read -p "Upgrade packages? " -n 1 -r
