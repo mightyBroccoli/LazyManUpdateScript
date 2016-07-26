@@ -62,12 +62,12 @@ if [ -f "$FILE" ];
 then
   echo -e "Dependencies already checked.\n"
 else
-  echo -e "Checking now /n"
+  echo -e "Checking now \n"
   root_check
   dpkg_check
   aptitude_check
   awk_check
-  touch /home/nico/scripts/lazymanupdatescript/.dependencies
+  touch ~/scripts/lazymanupdatescript/.dependencies
 fi
 
 
