@@ -174,6 +174,7 @@ fi
   echo ------
   if [ -f /var/run/reboot-required ]; then
     echo -e $CYAN 'reboot is required'$ENDCOLOR
+    checkrestart
     else
     echo -e $CYAN 'no reboot required'$ENDCOLOR
   fi
