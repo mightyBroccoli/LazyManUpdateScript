@@ -31,7 +31,7 @@ aptitude_check ()
   if command -v aptitude > /dev/null; then
     echo -e $GREEN"Detected aptitude"$ENDCOLOR
   else
-    echo $RED"Installing aptitude...\n"$ENDCOLOR
+    echo -e $RED"Installing aptitude...\n"$ENDCOLOR
     apt-get install -q -y aptitude
   fi
 }
@@ -41,7 +41,7 @@ dpkg_check ()
   if command -v dpkg > /dev/null; then
     echo -e $GREEN"Detected dpkg"$ENDCOLOR
   else
-    echo $RED"Installing dpkg...\n"$ENDCOLOR
+    echo -e $RED"Installing dpkg...\n"$ENDCOLOR
     apt-get install -q -y dpkg
   fi
 }
@@ -51,7 +51,7 @@ awk_check ()
   if command -v mawk > /dev/null; then
     echo -e $GREEN"Detected mawk"$ENDCOLOR
   else
-    echo $RED"Installing awk...\n"$ENDCOLOR
+    echo -e $RED"Installing awk...\n"$ENDCOLOR
     apt-get install -q -y mawk
   fi
 }
@@ -60,14 +60,14 @@ awk_check ()
 #running subroutines
 if [ -f "$FILE" ];
 then
-  echo "Dependencies already checked.\n"
+  echo -e "Dependencies already checked.\n"
 else
-  echo "Checking now /n"
+  echo -e "Checking now \n"
   root_check
   dpkg_check
   aptitude_check
   awk_check
-  touch /home/nico/scripts/lazymanupdatescript/.dependencies
+  touch ~/scripts/lazymanupdatescript/.dependencies
 fi
 
 
@@ -76,96 +76,160 @@ echo ------
 echo ------
 #apt-get update with the option assume yes (-y) just showing new packets
 echo -e $RED "\n resynchronizing the package index...\n" $ENDCOLOR
-apt update -y | grep -E "^Holen|^Get"
-
+#apt update -y | grep -E "^Holen|^Get"
 #showing upgradable packages
 echo -e $GREEN "\n upgradable packages: \n" $ENDCOLOR
 apt list --upgradable
-echo "\n"
+echo -e "\n"
 
 #upgrading packages
-read -p "Upgrade packages? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-  # n
-  echo -e "\n skipping ... \n"
-else
-  # y
-  echo -e "\n"
-  echo ------
-  echo -e $GREEN "upgrade" $ENDCOLOR 
-  echo ------
-  #automaticly updating the installed packages from available ressources
-  #apt-get upgrade with the option assume yes (-y)
-  apt upgrade -y
-  #apt-get dist-upgrade with the option assume yes (-y)
-  apt dist-upgrade -y
+if [ "$1" = "-y" ]
+    then
+        # assume yes
+        echo -e "\n"
+        echo ------
+        echo -e $GREEN "upgrade" $ENDCOLOR 
+        echo ------
+        #automaticly updating the installed packages from available ressources
+        #apt-get upgrade with the option assume yes (-y)
+        apt upgrade -y
+        #apt-get dist-upgrade with the option assume yes (-y)
+        apt dist-upgrade -y    
+    else
+        # no
+        read -t 5 -n 3 -p "Upgrade packages (y/n)?" yn
+        while true ; do
+          case $yn in
+              [Yy]* ) echo -e "\n";
+                      echo ------;
+                      echo -e $GREEN "upgrade" $ENDCOLOR;
+                      echo ------;
+                      #automaticly updating the installed packages from available ressources
+                      #apt-get upgrade with the option assume yes (-y)
+                      apt upgrade -y;
+                      #apt-get dist-upgrade with the option assume yes (-y)
+                      apt dist-upgrade -y;
+                      break;;
+              [Nn]* ) echo -e "\n skipping ... \n";
+                      break;;
+              * )     echo "Please answer yes or no.";;
+          esac
+        done
 fi
 
 #dependencies
-read -p "Check all dependencies? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-  # n
-  echo -e "\n skipping ... \n"
-else
-  # y
-  echo -e "\n"
-  echo ------
-  echo -e $YELLOW "dependencies" $ENDCOLOR
-  echo ------
-  #check for broken dependencies
-  #apt-get check with the option assume yes (-y)
-  apt-get check -y
-  #apt-get install with the option fix-broken (-f) and fix-missing (-m) and assume yes (-y)
-  apt install -f -m -y
+if [ "$1" = "-y" ]
+    then
+        # assume yes
+        echo -e "\n"
+        echo ------
+        echo -e $YELLOW "dependencies" $ENDCOLOR
+        echo ------
+        #check for broken dependencies
+        #apt-get check with the option assume yes (-y)
+        apt-get check -y
+        #apt-get install with the option fix-broken (-f) and fix-missing (-m) and assume yes (-y)
+        apt install -f -m -y   
+    else
+        # no
+        read -t 5 -n 3 -p "Check all dependencies (y/n)?" yn
+        while true ; do
+          case $yn in
+              [Yy]* ) echo -e "\n";
+                      echo ------;
+                      echo -e $YELLOW "dependencies" $ENDCOLOR;
+                      echo ------;
+                      #check for broken dependencies
+                      #apt-get check with the option assume yes (-y)
+                      apt-get check -y;
+                      #apt-get install with the option fix-broken (-f) and fix-missing (-m) and assume yes (-y)
+                      apt install -f -m -y;
+                      break;;
+              [Nn]* ) echo -e "\n skipping ... \n";
+                      break;;
+              * )     echo "Please answer yes or no.";;
+          esac
+        done
 fi
 
 #cleaning
-echo -e "\n"
-echo "Cleaning involves :"
-echo "* removing unused packages"
-echo "* cleanig out package list cache"
-echo -e "\n"
-read -p "Should cleaning be done? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-  # n
-  echo -e "\n skipping ... \n"
-else
-  # y
-  echo -e "\n"
-  echo ------
-  echo -e  $BLUE "cleaning" $ENDCOLOR
-  echo ------
-  #various cleaning options
-  apt-get autoremove -y
-  apt-get autoclean -y
-  apt-get clean -y
-  aptitude autoclean
-
-  echo " "
-  echo -e $RED "dumping local trash files..." $ENDCOLOR
-  echo " "
-  rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
-  rm -rf /root/.local/share/Trash/*/** &> /dev/null
-  #cleaning user/ root temp files
+if [ "$1" = "-y" ]
+    then
+        # assume yes
+        echo -e "\n"
+        echo ------
+        echo -e  $BLUE "cleaning" $ENDCOLOR
+        echo ------
+        #various cleaning options
+        apt-get autoremove -y
+        apt-get autoclean -y
+        apt-get clean -y
+        aptitude autoclean
+        echo " "
+        echo -e $RED "dumping local trash files... \n" $ENDCOLOR
+        rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
+        rm -rf /root/.local/share/Trash/*/** &> /dev/null
+        #cleaning user/ root temp files
+    else
+        # no
+        echo -e "\n"
+        echo -e "Cleaning involves :"
+        echo -e "* removing unused packages"
+        echo -e "* cleanig package list cache"
+        echo -e "* cleaning users trash"
+        echo -e "\n"
+        read -t 5 -n 3 -p "Should cleaning be done (y/n)?" yn
+        while true ; do
+          case $yn in
+              [Yy]* ) echo -e "\n";
+                      echo ------;
+                      echo -e  $BLUE "cleaning" $ENDCOLOR;
+                      echo ------;
+                      #various cleaning options
+                      apt-get autoremove -y;
+                      apt-get autoclean -y;
+                      apt-get clean -y;
+                      aptitude autoclean;
+                      echo " "
+                      echo -e $RED "dumping local trash files... \n" $ENDCOLOR;
+                      rm -rf /home/*/.local/share/Trash/*/** &> /dev/null;
+                      rm -rf /root/.local/share/Trash/*/** &> /dev/null;
+                      #cleaning user/ root temp files
+                      break;;
+              [Nn]* ) echo -e "\n skipping ... \n";
+                      break;;
+              * )     echo "Please answer yes or no.";;
+          esac
+        done
 fi
 
 #removing old config files and checking if reboot is needed
-read -p "Remove old config files ? " -n 1 -r
-if [[ ! $REPLY =~ ^[Yy]$ ]]
-then
-  # n
-  echo -e "\n skipping ... \n"
-else
-  # y
-  echo -e "\n"
-  echo ------
-  echo -e $PURPLE "Removing old config files" $ENDCOLOR
-  echo ------
-  #removing unused config files !!NO ASSUME YES HERE TO PREVENT BROKEN STUFF!!
-  aptitude purge $OLDCONF
+if [ "$1" = "-y" ]
+    then
+        # assume yes
+        echo -e "\n"
+        echo ------
+        echo -e $PURPLE "Removing old config files" $ENDCOLOR
+        echo ------
+        #removing unused config files !!NO ASSUME YES HERE TO PREVENT BROKEN STUFF!!
+        aptitude purge $OLDCONF
+    else
+        # no
+        read -t 5 -n 3 -p "Remove old config files (y/n)?" yn
+        while true ; do
+          case $yn in
+              [Yy]* ) echo -e "\n";
+                      echo ------;
+                      echo -e $PURPLE "Removing old config files" $ENDCOLOR;
+                      echo ------;
+                      #removing unused config files !!NO ASSUME YES HERE TO PREVENT BROKEN STUFF!!
+                      aptitude purge $OLDCONF;
+                      break;;
+              [Nn]* ) echo -e "\n skipping ... \n";
+                      break;;
+              * )     echo "Please answer yes or no.";;
+          esac
+        done
 fi
 
  #check if reboot is needed
@@ -174,9 +238,10 @@ fi
   echo ------
   if [ -f /var/run/reboot-required ]; then
     echo -e $CYAN 'reboot is required'$ENDCOLOR
+    checkrestart
     else
     echo -e $CYAN 'no reboot required'$ENDCOLOR
   fi
 
 #clearing variables
-unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF FILE
+unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF FILE ANOTHERFILE
