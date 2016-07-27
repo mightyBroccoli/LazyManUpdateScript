@@ -13,5 +13,4 @@
 .Trash-*
 
 # temporary files relevant for the script
-.test
 .dependencies
