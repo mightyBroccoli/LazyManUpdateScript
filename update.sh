@@ -76,7 +76,7 @@ echo ------
 echo ------
 #apt-get update with the option assume yes (-y) just showing new packets
 echo -e $RED "\n resynchronizing the package index...\n" $ENDCOLOR
-#apt update -y | grep -E "^Holen|^Get"
+apt update -y | grep -E "^Holen|^Get"
 #showing upgradable packages
 echo -e $GREEN "\n upgradable packages: \n" $ENDCOLOR
 apt list --upgradable
@@ -97,7 +97,7 @@ if [ "$1" = "-y" ]
         apt dist-upgrade -y    
     else
         # no
-        read -t 5 -n 3 -p "Upgrade packages (y/n)?" yn
+        read -n 3 -p "Upgrade packages (y/n)?" yn
         while true ; do
           case $yn in
               [Yy]* ) echo -e "\n";
@@ -112,7 +112,9 @@ if [ "$1" = "-y" ]
                       break;;
               [Nn]* ) echo -e "\n skipping ... \n";
                       break;;
-              * )     echo "Please answer yes or no.";;
+              * )     echo -e "\n";
+					  echo "Please answer yes or no.";
+					  break;;
           esac
         done
 fi
@@ -132,7 +134,7 @@ if [ "$1" = "-y" ]
         apt install -f -m -y   
     else
         # no
-        read -t 5 -n 3 -p "Check all dependencies (y/n)?" yn
+        read -n 3 -p "Check all dependencies (y/n)?" yn
         while true ; do
           case $yn in
               [Yy]* ) echo -e "\n";
@@ -147,7 +149,9 @@ if [ "$1" = "-y" ]
                       break;;
               [Nn]* ) echo -e "\n skipping ... \n";
                       break;;
-              * )     echo "Please answer yes or no.";;
+              * )     echo -e "\n";
+					  echo "Please answer yes or no.";
+					  break;;
           esac
         done
 fi
@@ -178,7 +182,7 @@ if [ "$1" = "-y" ]
         echo -e "* cleanig package list cache"
         echo -e "* cleaning users trash"
         echo -e "\n"
-        read -t 5 -n 3 -p "Should cleaning be done (y/n)?" yn
+        read -n 3 -p "Should cleaning be done (y/n)?" yn
         while true ; do
           case $yn in
               [Yy]* ) echo -e "\n";
@@ -198,7 +202,9 @@ if [ "$1" = "-y" ]
                       break;;
               [Nn]* ) echo -e "\n skipping ... \n";
                       break;;
-              * )     echo "Please answer yes or no.";;
+              * )     echo -e "\n";
+					  echo "Please answer yes or no.";
+					  break;;
           esac
         done
 fi
@@ -215,7 +221,7 @@ if [ "$1" = "-y" ]
         aptitude purge $OLDCONF
     else
         # no
-        read -t 5 -n 3 -p "Remove old config files (y/n)?" yn
+        read -n 3 -p "Remove old config files (y/n)?" yn
         while true ; do
           case $yn in
               [Yy]* ) echo -e "\n";
@@ -227,7 +233,9 @@ if [ "$1" = "-y" ]
                       break;;
               [Nn]* ) echo -e "\n skipping ... \n";
                       break;;
-              * )     echo "Please answer yes or no.";;
+              * )     echo -e "\n";
+					  echo "Please answer yes or no.";
+					  break;;
           esac
         done
 fi
@@ -244,4 +252,4 @@ fi
   fi
 
 #clearing variables
-unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF FILE ANOTHERFILE
+unset RED REDBACK GREEN GREENBACK YELLOW BLUE PURPLE ENDCOLOR CYAN OLDCONF FILE
