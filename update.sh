@@ -146,6 +146,21 @@ if [ "$1" = "-h" ]; then
   exit
 fi
 
+## distribution update ##
+if [ "$1" = "--dist-upgrade" ]; then
+    read -n 3 -p "Are you sure to dist upgrade (y/n)?" yn
+    while true ; do
+    case $yn in
+        [Yy]* ) dist_upgrade;
+                break;;
+        [Nn]* ) echo -e "\n skipping ... \n";
+                break;;
+        * )     echo -e $IRed"\n Please answer yes or no.";
+                break;;
+    esac
+  done
+fi
+
 # --- the actual script ---
 echo ------
 echo ------
@@ -153,7 +168,7 @@ echo ------
 echo -e $Red"\n resynchronizing the package index...\n"$Whi
 apt update -y | grep -E "^Holen|^Get"
 #showing upgradable packages
-echo -e $On_Gre"\n upgradable packages: \n"$Whi
+echo -e $IGre"\n upgradable packages: \n" $Whi
 apt list --upgradable
 echo -e "\n"
 
@@ -170,56 +185,52 @@ else
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e "\n Please answer yes or no.";
+        * )     echo -e $IRed"\n Please answer yes or no.";
 					      break;;
     esac
   done
 fi
 
 #dependencies
-if [ "$1" = "-y" ]
-  then
-    # assume yes
-		apt_check  
-  else
-    # no
-    read -n 3 -p "Check all dependencies (y/n)?" yn
-    while true ; do
-      case $yn in
-          [Yy]* ) apt_check;
-                      break;;
-          [Nn]* ) echo -e "\n skipping ... \n";
-                      break;;
-           * )     echo -e "\n Please answer yes or no.";
-					         break;;
-      esac
-    done
+if [ "$1" = "-y" ];then
+  # assume yes
+  apt_check  
+else
+  # no
+  read -n 3 -p "Check all dependencies (y/n)?" yn
+  while true ; do
+    case $yn in
+        [Yy]* ) apt_check;
+                break;;
+        [Nn]* ) echo -e "\n skipping ... \n";
+                break;;
+        * )     echo -e $IRed"\n Please answer yes or no.";
+				        break;;
+    esac
+  done
 fi
 
 #cleaning
-if [ "$1" = "-y" ]
-  then
-    # assume yes
-		recycle_stuff
-  else
-    # no
-    echo -e "\n"
-    echo -e "Cleaning involves :"
-    echo -e "* removing unused packages"
-    echo -e "* cleanig package list cache"
-    echo -e "* cleaning users trash"
-    echo -e "\n"
-    read -n 3 -p "Should cleaning be done (y/n)?" yn
-    while true ; do
-      case $yn in
-          [Yy]* ) recycle_stuff
-                  break;;
-          [Nn]* ) echo -e "\n skipping ... \n";
-                  break;;
-          * )     echo -e "\n Please answer yes or no.";
-					        break;;
-      esac
-    done
+if [ "$1" = "-y" ];then
+  # assume yes
+	recycle_stuff
+else
+  # no
+  echo -e $Yel"\n Cleaning involves :"
+  echo -e $Red"* removing unused packages"
+  echo -e $Red"* cleanig package list cache"
+  echo -e $Red"* cleaning users trash \n"$Whi
+  read -n 3 -p "Should cleaning be done (y/n)?" yn
+  while true ; do
+    case $yn in
+        [Yy]* ) recycle_stuff
+                break;;
+        [Nn]* ) echo -e "\n skipping ... \n";
+                break;;
+        * )     echo -e $IRed"\n Please answer yes or no.";
+				        break;;
+    esac
+  done
 fi
 
 #removing old config files and checking if reboot is needed
@@ -235,7 +246,7 @@ else
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e "\n Please answer yes or no.";
+        * )     echo -e $IRed"\n Please answer yes or no.";
 		  	        break;;
     esac
   done
@@ -243,20 +254,14 @@ fi
 
  #check if reboot is needed
 echo ------
-echo -e $Cya"Should I consider a reboot?" $Whi
+echo -e $BCya"Should I consider a reboot?" $Whi
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo -e $On_Red'reboot is required'$Whi
+  echo -e $On_Red"reboot is required $On_Bla \n"$Whi
 else
-  echo -e $On_Gre'no reboot required'$Whi
+  echo -e $On_Gre"no reboot required $On_Bla \n"$Whi
 fi
 checkrestart
-
-
-## distribution update ##
-if [ "$1" = "--dist-upgrade" ]; then
-  dist_upgrade
-fi
 
 #clearing variables
 unset OLDCONF FILE FILEPATH
