@@ -257,9 +257,9 @@ echo ------
 echo -e $BCya"Should I consider a reboot?" $Whi
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo -e $On_Red"reboot is required $On_Bla \n"$Whi
+  echo -e $On_Red"reboot is required \n"$Whi
 else
-  echo -e $On_Gre"no reboot required $On_Bla \n"$Whi
+  echo -e $On_Gre"no reboot required \n"$Whi
 fi
 checkrestart
 
