@@ -216,7 +216,7 @@ if [ "$1" = "-y" ];then
 	recycle_stuff
 else
   # no
-  echo -e $Yel"\n Cleaning involves :"
+  echo -e $BYel"\n Cleaning involves : \n"
   echo -e $Red"* removing unused packages"
   echo -e $Red"* cleanig package list cache"
   echo -e $Red"* cleaning users trash \n"$Whi
