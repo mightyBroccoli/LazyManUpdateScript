@@ -1,10 +1,24 @@
 #!/bin/bash
-
-#use this script wisely, the creator is not responsible for any damage done to your system using this script
+#
+## Version 0.3.1
+#
+#
+## Dependencies
+#
+# bash > 4.2
+# bashutils
+# realpath
+# debian goodies
+# awk
+# aptitude / dpkg
+#
+#
+## Usage
+# edit all the user variables and possibly the tslog path to fit your needs
+# use this script wisely, the creator is not responsible for any damage done to your system using this script
 #mb
 
-#variables
-#possibly change the location
+#user variables
 FILE=$(realpath ~/scripts/lazymanupdatescript/.dependencies)
 FILEPATH=$(realpath ~/scripts/lazymanupdatescript)
 OLDCONF=$(dpkg -l|grep "^rc"|awk '{print $2}')
@@ -23,9 +37,9 @@ Whi='\e[0;37m';     BWhi='\e[1;37m';    UWhi='\e[4;37m';    IWhi='\e[0;97m';    
 root_check()
 #is the running user root?
 {
-if [ $USER != root ]; then
-  echo -e $On_Red"Error: must be root \n"
-  echo -e $IRed"Exiting...\n"$Whi
+if [ "$USER" != root ]; then
+  echo -e "$On_Red""Error: must be root \n"
+  echo -e "$IRed""Exiting...\n""$Whi"
   exit 0
 fi
 }
@@ -33,29 +47,29 @@ dependencies_check ()
 #check if package 'aptitude' is installed
 {
 if [ -f "$FILE" ];then
-  echo -e $BGre"Dependencies already checked.\n"$Whi
+  echo -e "$BGre""Dependencies already checked.\n""$Whi"
 else
   echo -e "Checking now \n"
   if command -v aptitude > /dev/null; then
-    echo -e $Gre"Detected aptitude"$Whi
+    echo -e "$Gre""Detected aptitude""$Whi"
   else
-    echo -e $Red"Installing aptitude...\n"$Whi
+    echo -e "$Red""Installing aptitude...\n""$Whi"
     apt-get install -q aptitude
   fi
   if command -v dpkg > /dev/null; then
-    echo -e $Gre"Detected dpkg"$Whi
+    echo -e "$Gre""Detected dpkg""$Whi"
   else
-    echo -e $Red"Installing dpkg...\n"$Whi
+    echo -e "$Red""Installing dpkg...\n""$Whi"
     apt-get install -q dpkg
   fi
   if command -v mawk > /dev/null; then
-    echo -e $Gre"Detected mawk"$Whi
+    echo -e "$Gre""Detected mawk""$Whi"
   else
-    echo -e $Red"Installing awk...\n"$Whi
+    echo -e "$Red""Installing awk...\n""$Whi"
     apt-get install -q mawk
   fi
-  mkdir -p $FILEPATH
-  touch $FILE
+  mkdir -p "$FILEPATH"
+  touch "$FILE"
 fi
 }
 apt_upgrade ()
@@ -64,7 +78,7 @@ apt_upgrade ()
 {
 echo -e "\n"
 echo ------
-echo -e $BGre"upgrade" $Whi 
+echo -e "$BGre""upgrade" "$Whi" 
 echo ------
 apt upgrade -y
 }
@@ -76,7 +90,7 @@ apt_check ()
 {
 echo -e "\n"
 echo ------
-echo -e $BYel"dependencies"$Whi
+echo -e "$BYel""dependencies""$Whi"
 echo ------
 apt-get check -y
 apt install -f -m -y 
@@ -87,14 +101,14 @@ recycle_stuff ()
 {
 echo -e "\n"
 echo ------
-echo -e  $BBlu"cleaning"$Whi
+echo -e  "$BBlu""cleaning""$Whi"
 echo ------
 apt-get autoremove -y
 apt-get autoclean -y
 apt-get clean -y
 aptitude autoclean
 echo " "
-echo -e $Red"dumping local trash files... \n"$Whi
+echo -e "$Red""dumping local trash files... \n""$Whi"
 rm -rf /home/*/.local/share/Trash/*/** &> /dev/null
 rm -rf /root/.local/share/Trash/*/** &> /dev/null
 }
@@ -103,14 +117,14 @@ aptitude_purge ()
 {
 echo -e "\n"
 echo ------
-echo -e $BPur"Removing old config files"$Whi
+echo -e "$BPur""Removing old config files""$Whi"
 echo ------
-aptitude purge $OLDCONF
+aptitude purge "$OLDCONF"
 }
 dist_upgrade()
 #apt-get dist-upgrade to upgrade your distribution to next higher level
 {
-read -n 3 -p "Are you sure to upgrade your distribution (y/n)?" yn
+read -r -n 3 -p "Are you sure to upgrade your distribution (y/n)?" yn
 while true ; do
   case $yn in
       [Yy]* ) apt dist-upgrade;
@@ -129,8 +143,8 @@ dependencies_check
 
 #help output
 if [ "$1" = "-h" ]; then
-  echo -e $BGre"-- -- -- Update Script -- -- --"$Whi
-  echo -e $BPur" -- -- Script flow -- --\n"$Whi
+  echo -e "$BGre""-- -- -- Update Script -- -- --""$Whi"
+  echo -e "$BPur"" -- -- Script flow -- --\n""$Whi"
   echo -e "1. updating the package index"
   echo -e " 1.1 displaying the upgradable packages"
   echo -e "2. updating all upgradable packages"
@@ -139,23 +153,23 @@ if [ "$1" = "-h" ]; then
   echo -e "5. removing all remaining config files from uninstalled packages"
   echo -e "6. checking if a reboot is necessary \n"
 
-  echo -e $BPur" -- -- Usage: update.sh -- --\n"$Whi
-  echo -e $Gre"-h $Whi			display this help message \n"
-  echo -e $Gre"-y $Whi			assume yes option to accept everything the script tries to do \n"
-  echo -e $Gre"--dist-upgrade $Whi		upgrading the distributing to the lastest stable release \n"$Whi
+  echo -e "$BPur"" -- -- Usage: update.sh -- --\n""$Whi"
+  echo -e "$Gre""-h $Whi			display this help message \n"
+  echo -e "$Gre""-y $Whi			assume yes option to accept everything the script tries to do \n"
+  echo -e "$Gre""--dist-upgrade $Whi		upgrading the distributing to the lastest stable release \n""$Whi"
   exit
 fi
 
 ## distribution update ##
 if [ "$1" = "--dist-upgrade" ]; then
-    read -n 3 -p "Are you sure to dist upgrade (y/n)?" yn
+    read -r -n 3 -p "Are you sure to dist upgrade (y/n)?" yn
     while true ; do
     case $yn in
         [Yy]* ) dist_upgrade;
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e $IRed"\n Please answer yes or no.";
+        * )     echo -e "$IRed""\n Please answer yes or no.";
                 break;;
     esac
   done
@@ -165,10 +179,10 @@ fi
 echo ------
 echo ------
 #apt-get update with the option assume yes (-y) just showing new packets
-echo -e $Red"\n resynchronizing the package index...\n"$Whi
+echo -e "$Red""\n resynchronizing the package index...\n""$Whi"
 apt update -y | grep -E "^Holen|^Get"
 #showing upgradable packages
-echo -e $IGre"\n upgradable packages: \n" $Whi
+echo -e "$IGre""\n upgradable packages: \n" "$Whi"
 apt list --upgradable
 echo -e "\n"
 
@@ -178,14 +192,14 @@ if [ "$1" = "-y" ]; then
 	apt_upgrade
 else
   # no
-  read -n 3 -p "Upgrade packages (y/n)?" yn
+  read -r -n 3 -p "Upgrade packages (y/n)?" yn
   while true ; do
     case $yn in
         [Yy]* ) apt_upgrade;
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e $IRed"\n Please answer yes or no.";
+        * )     echo -e "$IRed""\n Please answer yes or no.";
 					      break;;
     esac
   done
@@ -197,14 +211,14 @@ if [ "$1" = "-y" ];then
   apt_check  
 else
   # no
-  read -n 3 -p "Check all dependencies (y/n)?" yn
+  read -r -n 3 -p "Check all dependencies (y/n)?" yn
   while true ; do
     case $yn in
         [Yy]* ) apt_check;
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e $IRed"\n Please answer yes or no.";
+        * )     echo -e "$IRed""\n Please answer yes or no.";
 				        break;;
     esac
   done
@@ -216,18 +230,18 @@ if [ "$1" = "-y" ];then
 	recycle_stuff
 else
   # no
-  echo -e $BYel"\n Cleaning involves : \n"
-  echo -e $Red"* removing unused packages"
-  echo -e $Red"* cleanig package list cache"
-  echo -e $Red"* cleaning users trash \n"$Whi
-  read -n 3 -p "Should cleaning be done (y/n)?" yn
+  echo -e "$BYel""\n Cleaning involves : \n"
+  echo -e "$Red""* removing unused packages"
+  echo -e "$Red""* cleanig package list cache"
+  echo -e "$Red""* cleaning users trash \n""$Whi"
+  read -r -n 3 -p "Should cleaning be done (y/n)?" yn
   while true ; do
     case $yn in
         [Yy]* ) recycle_stuff
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e $IRed"\n Please answer yes or no.";
+        * )     echo -e "$IRed""\n Please answer yes or no.";
 				        break;;
     esac
   done
@@ -239,14 +253,14 @@ if [ "$1" = "-y" ];then
 	aptitude_purge
 else
   # no
-  read -n 3 -p "Remove old config files (y/n)?" yn
+  read -r -n 3 -p "Remove old config files (y/n)?" yn
   while true ; do
     case $yn in
         [Yy]* ) aptitude_purge;
                 break;;
         [Nn]* ) echo -e "\n skipping ... \n";
                 break;;
-        * )     echo -e $IRed"\n Please answer yes or no.";
+        * )     echo -e "$IRed""\n Please answer yes or no.";
 		  	        break;;
     esac
   done
@@ -254,12 +268,12 @@ fi
 
  #check if reboot is needed
 echo ------
-echo -e $BCya"Should I consider a reboot?" $Whi
+echo -e "$BCya""Should I consider a reboot?" "$Whi"
 echo ------
 if [ -f /var/run/reboot-required ]; then
-  echo -e $On_Red"reboot is required \n"$Whi
+  echo -e "$On_Red""reboot is required \n""$Whi"
 else
-  echo -e $On_Gre"no reboot required \n"$Whi
+  echo -e "$On_Gre""no reboot required \n""$Whi"
 fi
 checkrestart
 
